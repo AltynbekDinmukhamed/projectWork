@@ -61,7 +61,7 @@ class ViewController: UIViewController {
     }()
     
     var photoData: [PhotoData]? = []
-    var vieoData: [VideoData] = []
+    var vieoData: [VideoData]? = []
     
     //MARK: -LifeCycle-
     override func viewDidLoad() {
@@ -69,6 +69,7 @@ class ViewController: UIViewController {
         setUpViews()
         makeContraints()
         gettingData()
+        gettingVideo()
     }
     //MARK: -Functions-
     func gettingData() {
@@ -80,6 +81,18 @@ class ViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.collection.reloadData()
                 }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    func gettingVideo() {
+        let video = "https://pixabay.com/api/videos/?key=39975920-1087ba3a8b7d7f1e975f1c2f4&q=yellow+flowers"
+        Server.shared.fetchVideo(url: video) { result in
+            switch result {
+            case .success(let data):
+                self.vieoData = [data]
             case .failure(let error):
                 print(error)
             }
@@ -142,15 +155,30 @@ extension ViewController: UISearchBarDelegate {
 //MARK: -extension Collection View Delegates-
 extension ViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return photoData?.count ?? 0
+        switch pSegmentController.selectedSegmentIndex {
+        case 0:
+            return photoData?.count ?? 0
+        case 1:
+            return vieoData?.count ?? 0
+        default:
+            fatalError("Dimash guilty")
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photoData?[section].hits.count ?? 0
+        switch pSegmentController.selectedSegmentIndex {
+        case 0:
+            return photoData?[0].hits.count ?? 0
+        case 1:
+            return vieoData?[0].hits.count ?? 0
+        default:
+            fatalError("Dimash guilty too")
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch pSegmentController.selectedSegmentIndex {
+        //MARK: Working with first cell
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PCell", for: indexPath) as! PhotoCollectionViewCell
             let hit = photoData?[indexPath.section].hits[indexPath.row]
@@ -164,8 +192,20 @@ extension ViewController: UICollectionViewDataSource {
             }
             cell.nameLbl.text = hit?.tags
             return cell
+            
+        //MARK: working with secound cell
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VCell", for: indexPath) as! VideoCollectionViewCell
+            let hit = vieoData?[indexPath.section].hits[indexPath.row]
+            if let urlVideo = hit?.userImageURL, let url = URL(string: urlVideo) {
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data = data, let image = UIImage(data: data) else { return }
+                    DispatchQueue.main.async {
+                        cell.videoPhotoImage.image = image
+                    }
+                }.resume()
+            }
+            cell.nameLbl.text = hit?.tags
             return cell
         default:
             fatalError("something wrong with cells")
@@ -178,7 +218,8 @@ extension ViewController: UICollectionViewDataSource {
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = TappedViewController()
+        vc.modalPresentationStyle = .fullScreen
         
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.present(vc, animated: true)
     }
 }
