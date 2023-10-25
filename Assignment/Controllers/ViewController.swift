@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         return segment
     }()
     
-    let pSearchView: UISearchBar = {
+    private let pSearchView: UISearchBar = {
         let search = UISearchBar()
         search.placeholder = "Search"
         let searchTextField = search.searchTextField
@@ -45,13 +45,14 @@ class ViewController: UIViewController {
         return search
     }()
     
-    let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    private let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
     
     private let collection: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        layout.itemSize = CGSize(width: 158, height: 154)
-        layout.minimumLineSpacing = 25
+        
+        //layout.itemSize = CGSize(width: 158, height: 174)
+//        layout.minimumLineSpacing = 5
+//        layout.minimumInteritemSpacing = 5
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: "PCell")
@@ -60,8 +61,12 @@ class ViewController: UIViewController {
         return collection
     }()
     
-    var photoData: [PhotoData]? = []
-    var vieoData: [VideoData]? = []
+    private var photoData: [PhotoData]? = []
+    private var vieoData: [VideoData]? = []
+    
+    var photoDelegate: TappedViewPhotoDelegate?
+    
+    var viewDeleagate: TappedVideoVideoDelegate?
     
     //MARK: -LifeCycle-
     override func viewDidLoad() {
@@ -72,7 +77,7 @@ class ViewController: UIViewController {
         gettingVideo()
     }
     //MARK: -Functions-
-    func gettingData() {
+    private func gettingData() {
         let photo = "https://pixabay.com/api/?key=39975920-1087ba3a8b7d7f1e975f1c2f4&q=yellow+flowers&image_type=photo"
         Server.shared.fetch(url: photo) { result in
             switch result {
@@ -87,7 +92,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func gettingVideo() {
+    private func gettingVideo() {
         let video = "https://pixabay.com/api/videos/?key=39975920-1087ba3a8b7d7f1e975f1c2f4&q=yellow+flowers"
         Server.shared.fetchVideo(url: video) { result in
             switch result {
@@ -190,6 +195,7 @@ extension ViewController: UICollectionViewDataSource {
                     }
                 }.resume()
             }
+            cell.layoutMargins = UIEdgeInsets.zero
             cell.nameLbl.text = hit?.tags
             return cell
             
@@ -197,15 +203,15 @@ extension ViewController: UICollectionViewDataSource {
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VCell", for: indexPath) as! VideoCollectionViewCell
             let hit = vieoData?[indexPath.section].hits[indexPath.row]
-            if let urlVideo = hit?.userImageURL, let url = URL(string: urlVideo) {
+            if let urlImage = hit?.userImageURL, let url = URL(string: urlImage) {
                 URLSession.shared.dataTask(with: url) { data, _, _ in
                     guard let data = data, let image = UIImage(data: data) else { return }
                     DispatchQueue.main.async {
                         cell.videoPhotoImage.image = image
                     }
                 }.resume()
+                
             }
-            cell.nameLbl.text = hit?.tags
             return cell
         default:
             fatalError("something wrong with cells")
@@ -214,12 +220,70 @@ extension ViewController: UICollectionViewDataSource {
     }
     
 }
-
+//MARK: -Collection Delegate-
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = TappedViewController()
+        let vc2 = TappedVideoViewController()
         vc.modalPresentationStyle = .fullScreen
+        photoDelegate = vc
         
-        navigationController?.present(vc, animated: true)
+//        navigationController?.present(vc, animated: true, completion: { [self] in
+//            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell, let image = cell.photoImage.image {
+//                photoDelegate?.sendPhoto(image)
+//            } 
+//            
+//            if let vidCell = collectionView.cellForItem(at: indexPath) as? VideoCollectionViewCell, let image = vidCell.videoURL {
+//                photoDelegate?.sendPhoto(videoUrl)
+//            }
+//            
+//        })
+        if pSegmentController.selectedSegmentIndex == 0 {
+            let vc = TappedViewController()
+            vc.modalPresentationStyle = .fullScreen
+            
+            if let photoCell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell, let image = photoCell.photoImage.image {
+                vc.image = image
+            }
+            navigationController?.present(vc, animated: true)
+        } else if pSegmentController.selectedSegmentIndex == 1 {
+            let vc = TappedVideoViewController()
+            vc.modalPresentationStyle = .fullScreen
+            
+            let selectedVideo = vieoData![indexPath.section].hits[indexPath.row].videos.medium.url
+            let urlVidep = URL(string: selectedVideo)
+            vc.videoUrl = urlVidep
+            navigationController?.present(vc, animated: true)
+        }
+    }
+}
+
+//MARK: -Collection View Flow Layout Delegate-
+extension ViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width / 2.3, height: 184)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+}
+
+extension ViewController: TappedVideoVideoDelegate {
+    func sendVideo(withURl url: URL) {
+        let tappedVidepVC = TappedVideoViewController()
+        tappedVidepVC.delegate = self
+        tappedVidepVC.videoUrl = url
+        present(tappedVidepVC, animated: true)
     }
 }

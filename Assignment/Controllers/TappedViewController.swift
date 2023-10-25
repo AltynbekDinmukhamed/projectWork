@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import SnapKit
 
+protocol TappedViewPhotoDelegate {
+    func sendPhoto(_ image: UIImage)
+}
+
 class TappedViewController: UIViewController {
     //MARK: -Variables-
     private let mainImage: UIImageView = {
@@ -26,6 +30,8 @@ class TappedViewController: UIViewController {
         btn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         return btn
     }()
+    
+    var image: UIImage? 
     //MARK: -LifeCycle-
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +48,7 @@ extension TappedViewController {
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.81)
         navigationController?.isNavigationBarHidden = true
         
+        mainImage.image = image
         view.addSubview(mainImage)
         view.addSubview(backBtn)
     }
@@ -62,6 +69,12 @@ extension TappedViewController {
 //  MARK: -Objc func extension for btn-
 extension TappedViewController {
     @objc private func backTapped(_ sender: UIButton) {
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true)
+    }
+}
+
+extension TappedViewController: TappedViewPhotoDelegate {
+    func sendPhoto(_ image: UIImage) {
+        mainImage.image = image
     }
 }

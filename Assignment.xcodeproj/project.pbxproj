@@ -19,6 +19,7 @@
 		569861032AD676EC00E2F2D8 /* PhotoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569861022AD676EC00E2F2D8 /* PhotoData.swift */; };
 		569861052AD6785500E2F2D8 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569861042AD6785500E2F2D8 /* Server.swift */; };
 		569861072AD6965100E2F2D8 /* VideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569861062AD6965100E2F2D8 /* VideoData.swift */; };
+		569C68282AE59B2400674FAF /* TappedVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569C68272AE59B2400674FAF /* TappedVideoViewController.swift */; };
 		CD027FDD58835B4D30444422 /* Pods_Assignment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04EE0BAB64CB72BD50F1EBA2 /* Pods_Assignment.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		569861022AD676EC00E2F2D8 /* PhotoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoData.swift; sourceTree = "<group>"; };
 		569861042AD6785500E2F2D8 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		569861062AD6965100E2F2D8 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
+		569C68272AE59B2400674FAF /* TappedVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappedVideoViewController.swift; sourceTree = "<group>"; };
 		B2AA0DE792917B03504735D0 /* Pods-Assignment.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Assignment.release.xcconfig"; path = "Target Support Files/Pods-Assignment/Pods-Assignment.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +110,7 @@
 			children = (
 				569860E52AD57C7400E2F2D8 /* ViewController.swift */,
 				569860FF2AD6507900E2F2D8 /* TappedViewController.swift */,
+				569C68272AE59B2400674FAF /* TappedVideoViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				569861072AD6965100E2F2D8 /* VideoData.swift in Sources */,
 				569861002AD6507900E2F2D8 /* TappedViewController.swift in Sources */,
 				569861052AD6785500E2F2D8 /* Server.swift in Sources */,
+				569C68282AE59B2400674FAF /* TappedVideoViewController.swift in Sources */,
 				569860E42AD57C7400E2F2D8 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

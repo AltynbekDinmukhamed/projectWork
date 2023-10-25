@@ -14,7 +14,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     let photoImage: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "photoCellBackground")
-        img.contentMode = .scaleAspectFill
+        img.contentMode = .scaleToFill
         return img
     }()
     
@@ -52,15 +52,16 @@ extension PhotoCollectionViewCell {
     
     private func makeViewConstraints() {
         photoImage.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-46)
+            make.top.equalToSuperview().offset(5)
+            make.left.equalToSuperview().offset(5)
+            make.right.equalToSuperview().offset(-5)
+            make.height.equalToSuperview().dividedBy(1.5)
         }
         nameLbl.snp.makeConstraints { make in
-            make.top.equalTo(photoImage.snp.bottom).offset(20)
+            make.top.equalTo(photoImage.snp.bottom).offset(10)
             make.bottom.equalToSuperview()
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().offset(3)
+            make.right.equalToSuperview().offset(-3)
         }
     }
 }
