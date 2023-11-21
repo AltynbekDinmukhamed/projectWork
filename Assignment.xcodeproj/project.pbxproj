@@ -85,6 +85,10 @@
 		5664161C2B0CDF6F00CC9B0E /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
+				5664161E2B0CDFDE00CC9B0E /* 1.png */,
+				5664161D2B0CDFDE00CC9B0E /* 2.png */,
+				5664161F2B0CDFDF00CC9B0E /* 3.png */,
+				566416202B0CDFDF00CC9B0E /* 4.png */,
 			);
 			path = Screenshots;
 			sourceTree = "<group>";
@@ -112,10 +116,6 @@
 		569860E02AD57C7400E2F2D8 /* Assignment */ = {
 			isa = PBXGroup;
 			children = (
-				5664161E2B0CDFDE00CC9B0E /* 1.png */,
-				5664161D2B0CDFDE00CC9B0E /* 2.png */,
-				5664161F2B0CDFDF00CC9B0E /* 3.png */,
-				566416202B0CDFDF00CC9B0E /* 4.png */,
 				569861012AD676DF00E2F2D8 /* Modal */,
 				569860FA2AD595C600E2F2D8 /* Views */,
 				569860F62AD57D0C00E2F2D8 /* Other */,
