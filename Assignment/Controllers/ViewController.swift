@@ -139,9 +139,9 @@ extension ViewController {
         }
         collection.snp.makeConstraints { make in
             make.top.equalTo(pSearchView.snp.bottom).offset(16)
-            make.left.equalToSuperview().offset(15)
-            make.right.equalToSuperview().offset(-15)
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-27)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview()
         }
     }
 }
@@ -196,12 +196,16 @@ extension ViewController: UICollectionViewDataSource {
                 }.resume()
             }
             cell.layoutMargins = UIEdgeInsets.zero
+            cell.layer.cornerRadius = 10
             cell.nameLbl.text = hit?.tags
+            cell.photoImage.clipsToBounds = true
+            cell.photoImage.layer.cornerRadius = 10
             return cell
             
         //MARK: working with secound cell
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VCell", for: indexPath) as! VideoCollectionViewCell
+            cell.layer.cornerRadius = 10
             let hit = vieoData?[indexPath.section].hits[indexPath.row]
             if let urlImage = hit?.userImageURL, let url = URL(string: urlImage) {
                 URLSession.shared.dataTask(with: url) { data, _, _ in
@@ -212,6 +216,8 @@ extension ViewController: UICollectionViewDataSource {
                 }.resume()
                 
             }
+            cell.videoPhotoImage.clipsToBounds = true
+            cell.videoPhotoImage.layer.cornerRadius = 10
             return cell
         default:
             fatalError("something wrong with cells")
@@ -262,7 +268,7 @@ extension ViewController: UICollectionViewDelegate {
 extension ViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width / 2.3, height: 184)
+        return CGSize(width: view.frame.width / 2.2, height: 184)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -270,7 +276,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 5
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
